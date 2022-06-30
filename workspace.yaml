@@ -1,0 +1,6 @@
+load_from:
+  - python_package:
+      package_name: modern_data_stack_assets
+      # Scopes down the repository to use in this Dagster deployment - this can be varied in
+      # different environments to allow the same code to be used in different environments
+      attribute: mds_repo

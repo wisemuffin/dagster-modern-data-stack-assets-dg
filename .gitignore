@@ -1,0 +1,5 @@
+.vscode/
+dagster-local-file-store/
+build/
+__pycache__/
+*.egg-info
