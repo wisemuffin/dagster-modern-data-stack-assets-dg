@@ -90,6 +90,35 @@ re_data overview generate --start-date 2021-12-23 --end-date 2021-12-31 --interv
 re_data overview serve;
 ```
 
+### re data meta key reserved by dagit issue:
+
+```
+File "/home/dave/.virtualenvs/dagster-modern-data-stack-assets-dg-GcWbdxwv/lib/python3.9/site-packages/dagster_dbt/asset_defs.py", line 433, in load_assets_from_dbt_manifest
+    dbt_assets_def = _dbt_nodes_to_assets(
+  File "/home/dave/.virtualenvs/dagster-modern-data-stack-assets-dg-GcWbdxwv/lib/python3.9/site-packages/dagster_dbt/asset_defs.py", line 272, in _dbt_nodes_to_assets
+    return AssetsDefinition(
+  File "/home/dave/.virtualenvs/dagster-modern-data-stack-assets-dg-GcWbdxwv/lib/python3.9/site-packages/dagster/core/asset_defs/assets.py", line 97, in __init__
+    self._group_names_by_key[key] = validate_group_name(group_name)
+  File "/home/dave/.virtualenvs/dagster-modern-data-stack-assets-dg-GcWbdxwv/lib/python3.9/site-packages/dagster/core/definitions/utils.py", line 123, in validate_group_name
+    return check_valid_name(group_name)
+  File "/home/dave/.virtualenvs/dagster-modern-data-stack-assets-dg-GcWbdxwv/lib/python3.9/site-packages/dagster/core/definitions/utils.py", line 57, in check_valid_name
+    raise DagsterInvalidDefinitionError(
+dagster.core.errors.DagsterInvalidDefinitionError: "meta" is not a valid name in Dagster. It conflicts with a Dagster or python reserved keyword.
+```
+
+as a quick fix in dbt_dagster:
+
+_dbt_nodes_to_assets()
+```python
+        # set the group for this asset
+        group_name = _get_node_group_name(node_info)
+        if group_name == 'meta':
+            group_names[asset_key] = 'meta_dg_fix'
+        elif group_name is not None:
+            group_names[asset_key] = group_name
+```
+
+
 ### send a notification TBC
 ```bash
 re_data notify slack \                                              ✘ INT  re-data-dbt-aMOho44y
